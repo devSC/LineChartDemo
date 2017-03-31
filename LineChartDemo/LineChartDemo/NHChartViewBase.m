@@ -9,10 +9,10 @@
 #import "NHChartViewBase.h"
 
 @interface NHChartViewBase()
-@property (nonatomic,assign)CGFloat offsetLeft;
-@property (nonatomic,assign)CGFloat offsetTop;
-@property (nonatomic,assign)CGFloat offsetRight;
-@property (nonatomic,assign)CGFloat offsetBottom;
+@property (nonatomic) CGFloat offsetLeft;
+@property (nonatomic) CGFloat offsetTop;
+@property (nonatomic) CGFloat offsetRight;
+@property (nonatomic) CGFloat offsetBottom;
 @end
 @implementation NHChartViewBase
 

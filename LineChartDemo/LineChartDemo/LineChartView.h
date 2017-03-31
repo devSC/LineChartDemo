@@ -11,51 +11,64 @@
 @interface LineChartView : NHChartViewBase
 
 //上部折线图所占整体比例
-@property (nonatomic,assign) CGFloat uperChartHeightScale;
+@property (nonatomic) CGFloat uperChartHeightScale;
 //上部和下部之间的间距
-@property (nonatomic,assign) CGFloat uperSpaceToBottom;
+@property (nonatomic) CGFloat uperSpaceToBottom;
 
+///线宽
 @property (nonatomic) CGFloat borderWidth;
+///线颜色
 @property (strong, nonatomic) UIColor *borderColor;
+///格子颜色
 @property (strong, nonatomic) UIColor *gridBackgroundColor;
 
 
 ///
-@property (strong, nonatomic) NSDictionary * leftYAxisAttributedDic;
-@property (strong, nonatomic) NSDictionary * xAxisAttributedDic;
-@property (strong, nonatomic) NSDictionary * highlightAttributedDic;
-@property (strong, nonatomic) NSDictionary * defaultAttributedDic;
+@property (strong, nonatomic) NSDictionary *leftYAxisAttributedDic;
+@property (strong, nonatomic) NSDictionary *xAxisAttributedDic;
+@property (strong, nonatomic) NSDictionary *highlightAttributedDic;
+@property (strong, nonatomic) NSDictionary *defaultAttributedDic;
 
 
-@property (nonatomic,assign)CGFloat offsetMaxPrice;
+@property (nonatomic) CGFloat offsetMaxPrice;
 
 ////闪烁点
-@property (nonatomic,assign)CGFloat candleWidth;
-@property (nonatomic,assign)CGFloat candleMaxWidth;
-@property (nonatomic,assign)CGFloat candleMinWidth;
+@property (nonatomic) CGFloat candleWidth;
+@property (nonatomic) CGFloat candleMaxWidth;
+@property (nonatomic) CGFloat candleMinWidth;
 
 //底部柱状图的最小单位比例
-@property (nonatomic,assign)CGFloat volumeCoordsScale;
+@property (nonatomic) CGFloat volumeCoordsScale;
 //折线图的最小单位比例
-@property (nonatomic,assign)CGFloat candleCoordsScale;
+@property (nonatomic) CGFloat candleCoordsScale;
 //UNKNow
-@property (nonatomic,assign)CGFloat maxPrice;
-@property (nonatomic,assign)CGFloat minPrice;
-@property (nonatomic,assign)CGFloat maxVolume;
-@property (nonatomic,assign)BOOL isETF;
+@property (nonatomic) CGFloat maxPrice;
+@property (nonatomic) CGFloat minPrice;
+@property (nonatomic) CGFloat maxVolume;
+@property (nonatomic) BOOL isETF;
 
 ///长按高亮时出的线
-@property (nonatomic,assign)NSInteger highlightLineCurrentIndex;
-@property (nonatomic,assign)CGPoint highlightLineCurrentPoint;
-@property (nonatomic,assign)BOOL highlightLineCurrentEnabled;
+@property (nonatomic) NSInteger highlightLineCurrentIndex;
+@property (nonatomic) CGPoint highlightLineCurrentPoint;
+@property (nonatomic) BOOL highlightLineCurrentEnabled;
 
-///最后一个点
-@property (nonatomic,assign)BOOL endPointShowEnabled;
+///是否支持高亮显示
+@property (nonatomic) BOOL highlightLineShowEnabled;
+
+///是否显示最后一个点
+@property (nonatomic) BOOL endPointShowEnabled;
+
+///将左边的文字绘制在图中
+@property (nonatomic) BOOL leftYAxisIsInChart;
+
+///将右边的文字是否绘制
+@property (nonatomic) BOOL rightYAxisDrawEnabled;
+
 
 //是否绘制均线图
-@property (nonatomic,assign)BOOL isDrawAvgEnabled;
+@property (nonatomic) BOOL isDrawAvgEnabled;
 ///
-@property (nonatomic,assign)NSInteger countOfTimes;
+@property (nonatomic) NSInteger countOfTimes;
 
 - (void)setData:(TimeDataset *)dataSet;
 

@@ -10,9 +10,9 @@
 
 @interface NHChartViewBase : UIView
 
-@property (nonatomic,assign) CGRect contentRect;
-@property (nonatomic,assign) CGFloat chartHeight;
-@property (nonatomic,assign) CGFloat chartWidth;
+@property (nonatomic) CGRect contentRect;
+@property (nonatomic) CGFloat chartHeight;
+@property (nonatomic) CGFloat chartWidth;
 
 
 - (void)setupChartOffsetWithLeft:(CGFloat)left

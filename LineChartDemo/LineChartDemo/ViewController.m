@@ -37,7 +37,7 @@
         [timeArray addObject:e];
     }
     
-//    [self.chartView setupChartOffsetWithLeft:50 top:10 right:10 bottom:10];
+    [self.chartView setupChartOffsetWithLeft:30 top:0 right:30 bottom:0];
     self.chartView.gridBackgroundColor = [UIColor whiteColor];
     self.chartView.borderColor = [UIColor colorWithRed:203/255.0 green:215/255.0 blue:224/255.0 alpha:1.0];
     self.chartView.borderWidth = .5;
@@ -64,9 +64,9 @@
     set.fillAlpha = .5f;
     set.drawFilledEnabled = YES;
 //    self.chartView.delegate = self;
-//    self.chartView.highlightLineShowEnabled = YES;
-//    self.chartView.leftYAxisIsInChart = YES;
-//    self.chartView.rightYAxisDrawEnabled = YES;
+    self.chartView.highlightLineShowEnabled = YES;
+    self.chartView.leftYAxisIsInChart = YES;
+    self.chartView.rightYAxisDrawEnabled = YES;
     [self.chartView setData:set];
 
 }

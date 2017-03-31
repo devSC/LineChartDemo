@@ -9,37 +9,37 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @interface LineDataSet : NSObject
-@property (nonatomic,strong)NSMutableArray * data;
-@property (nonatomic,assign)CGFloat highlightLineWidth;
-@property (nonatomic,strong)UIColor  * highlightLineColor;
-@property (nonatomic,strong)UIColor * candleRiseColor;
-@property (nonatomic,strong)UIColor * candleFallColor;
-@property (nonatomic,strong)UIColor * avgMA5Color;
-@property (nonatomic,strong)UIColor * avgMA10Color;
-@property (nonatomic,strong)UIColor * avgMA20Color;
-@property (nonatomic,assign)CGFloat  avgLineWidth;
-@property (nonatomic,assign)CGFloat candleTopBottmLineWidth;
+@property (strong, nonatomic) NSMutableArray * data;
+@property (nonatomic) CGFloat highlightLineWidth;
+@property (strong, nonatomic) UIColor  * highlightLineColor;
+@property (strong, nonatomic) UIColor * candleRiseColor;
+@property (strong, nonatomic) UIColor * candleFallColor;
+@property (strong, nonatomic) UIColor * avgMA5Color;
+@property (strong, nonatomic) UIColor * avgMA10Color;
+@property (strong, nonatomic) UIColor * avgMA20Color;
+@property (nonatomic) CGFloat  avgLineWidth;
+@property (nonatomic) CGFloat candleTopBottmLineWidth;
 
 
 @end
 
 
 @interface TimeDataset : NSObject
-@property (nonatomic,strong)NSMutableArray * data;
-@property (nonatomic,assign)CGFloat highlightLineWidth;
-@property (nonatomic,strong)UIColor  * highlightLineColor;
-@property (nonatomic,assign)CGFloat  lineWidth;
-@property (nonatomic,strong)UIColor * priceLineCorlor;
-@property (nonatomic,strong)UIColor * avgLineCorlor;
+@property (strong, nonatomic) NSMutableArray * data;
+@property (nonatomic) CGFloat highlightLineWidth;
+@property (strong, nonatomic) UIColor  * highlightLineColor;
+@property (nonatomic) CGFloat  lineWidth;
+@property (strong, nonatomic) UIColor * priceLineCorlor;
+@property (strong, nonatomic) UIColor * avgLineCorlor;
 
-@property (nonatomic,strong)UIColor * volumeRiseColor;
-@property (nonatomic,strong)UIColor * volumeFallColor;
-@property (nonatomic,strong)UIColor * volumeTieColor;
+@property (strong, nonatomic) UIColor * volumeRiseColor;
+@property (strong, nonatomic) UIColor * volumeFallColor;
+@property (strong, nonatomic) UIColor * volumeTieColor;
 
-@property (nonatomic,assign)BOOL drawFilledEnabled;
-@property (nonatomic,strong)UIColor * fillStartColor;
-@property (nonatomic,strong)UIColor * fillStopColor;
-@property (nonatomic,assign)CGFloat fillAlpha;
+@property (nonatomic) BOOL drawFilledEnabled;
+@property (strong, nonatomic) UIColor * fillStartColor;
+@property (strong, nonatomic) UIColor * fillStopColor;
+@property (nonatomic) CGFloat fillAlpha;
 
 
 @end

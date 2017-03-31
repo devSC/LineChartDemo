@@ -14,12 +14,14 @@
 
 @property (strong, nonatomic) TimeDataset *dataSet;
 
-@property (nonatomic)NSInteger countOfshowCandle;
-@property (nonatomic)NSInteger  startDrawIndex;
+@property (nonatomic) NSInteger countOfshowCandle;
+@property (nonatomic) NSInteger  startDrawIndex;
 
-@property (nonatomic,strong)CALayer * breathingPoint;
-@property (nonatomic,assign) CGFloat volumeWidth;
+@property (strong, nonatomic) CALayer *breathingPoint;
+@property (nonatomic)  CGFloat volumeWidth;
 
+@property (strong, nonatomic) UILongPressGestureRecognizer *longPressGesture;
+@property (strong, nonatomic) UITapGestureRecognizer *tapGesture;
 
 @end
 
@@ -47,12 +49,14 @@
 }
 
 - (void)initialize {
-    self.backgroundColor = [UIColor whiteColor];
+    
     self.borderWidth = 0.5;
     self.gridBackgroundColor = [UIColor whiteColor];
     self.borderColor = [UIColor colorWithRed:203/255.0 green:215/255.0 blue:224/255.0 alpha:1.0];
     self.uperChartHeightScale = 0.7;
     self.uperSpaceToBottom = 25;
+    self.candleCoordsScale = 0.f;
+    [self addGestureRecognizer:self.longPressGesture];
 }
 
 - (void)layoutSubviews {
@@ -92,10 +96,14 @@
     [self drawTimeLabel:context];
     
     //画点并连接成线
-    [self drawLineChart:context];
+    if (self.dataSet.data.count > 0) {
+        [self drawLineChart:context];
+    }
+    
+    //绘制详细文字
+    [self drawLabelPrice:context];
 }
-- (void)setCurrentDataMaxAndMin
-{
+- (void)setCurrentDataMaxAndMin {
     
     
     if (self.dataSet.data.count > 0) {
@@ -131,6 +139,63 @@
     }
 }
 
+- (void)drawLabelPrice:(CGContextRef)context {
+    
+    UIColor * labelBGColor = [UIColor colorWithWhite:1.0 alpha:0.3];
+    NSDictionary * drawAttributes = self.leftYAxisAttributedDic?:self.defaultAttributedDic;
+    //@2016-5-12 by Liuk, 价格统一往左移2个像素，价格标签把图标的线遮挡了
+    NSString * maxPriceStr = [self handleStrWithPrice:self.maxPrice];
+    NSMutableAttributedString * maxPriceAttStr = [[NSMutableAttributedString alloc]initWithString:maxPriceStr attributes:drawAttributes];
+    CGSize sizeMaxPriceAttStr = [maxPriceAttStr size];
+    CGRect maxPriceRect = CGRectMake(self.contentLeft - (self.leftYAxisIsInChart?0:sizeMaxPriceAttStr.width+2), self.contentTop, sizeMaxPriceAttStr.width, sizeMaxPriceAttStr.height);
+    [self drawRect:context rect:maxPriceRect color:labelBGColor];
+    [self drawLabel:context attributesText:maxPriceAttStr rect:maxPriceRect];
+    
+    NSString * midPriceStr = [self handleStrWithPrice:(self.maxPrice+self.minPrice)/2.0];
+    NSMutableAttributedString * midPriceAttStr = [[NSMutableAttributedString alloc]initWithString:midPriceStr attributes:drawAttributes];
+    CGSize sizeMidPriceAttStr = [midPriceAttStr size];
+    CGRect midPriceRect = CGRectMake(self.contentLeft - (self.leftYAxisIsInChart?0:sizeMidPriceAttStr.width+2), ((self.uperChartHeightScale * self.contentHeight)/2.0 + self.contentTop)-sizeMidPriceAttStr.height/2.0, sizeMidPriceAttStr.width, sizeMidPriceAttStr.height);
+    [self drawRect:context rect:midPriceRect color:labelBGColor];
+    [self drawLabel:context attributesText:midPriceAttStr rect:midPriceRect];
+    
+    NSString * minPriceStr = [self handleStrWithPrice:self.minPrice];
+    NSMutableAttributedString * minPriceAttStr = [[NSMutableAttributedString alloc]initWithString:minPriceStr attributes:drawAttributes];
+    CGSize sizeMinPriceAttStr = [minPriceAttStr size];
+    CGRect minPriceRect = CGRectMake(self.contentLeft - (self.leftYAxisIsInChart?0:sizeMinPriceAttStr.width+2), ((self.uperChartHeightScale * self.contentHeight) + self.contentTop - sizeMinPriceAttStr.height ), sizeMinPriceAttStr.width, sizeMinPriceAttStr.height);
+    [self drawRect:context rect:minPriceRect color:labelBGColor];
+    [self drawLabel:context attributesText:minPriceAttStr rect:minPriceRect];
+    
+    NSMutableAttributedString * zeroVolumeAttStr = [[NSMutableAttributedString alloc]initWithString:[self handleShowWithVolume:self.maxVolume] attributes:drawAttributes];
+    CGSize zeroVolumeAttStrSize = [zeroVolumeAttStr size];
+    CGRect zeroVolumeRect = CGRectMake(self.contentLeft - (self.leftYAxisIsInChart?0:zeroVolumeAttStrSize.width+2), self.contentBottom - zeroVolumeAttStrSize.height, zeroVolumeAttStrSize.width, zeroVolumeAttStrSize.height);
+    [self drawRect:context rect:zeroVolumeRect color:labelBGColor];
+    [self drawLabel:context attributesText:zeroVolumeAttStr rect:zeroVolumeRect];
+    
+    NSString * maxVolumeStr = [self handleShowNumWithVolume:self.maxVolume];
+    NSMutableAttributedString * maxVolumeAttStr = [[NSMutableAttributedString alloc]initWithString:maxVolumeStr attributes:drawAttributes];
+    CGSize maxVolumeAttStrSize = [maxVolumeAttStr size];
+    CGRect maxVolumeRect = CGRectMake(self.contentLeft - (self.leftYAxisIsInChart?0:maxVolumeAttStrSize.width+2), (self.uperChartHeightScale * self.contentHeight)+self.uperSpaceToBottom, maxVolumeAttStrSize.width, maxVolumeAttStrSize.height);
+    [self drawRect:context rect:maxVolumeRect color:labelBGColor];
+    [self drawLabel:context attributesText:maxVolumeAttStr rect:maxVolumeRect];
+    
+    
+    if (self.rightYAxisDrawEnabled) {
+        NSString * maxRateStr = [self handleRateWithPrice:self.maxPrice originPX:(self.maxPrice+self.minPrice)/2.0];
+        NSMutableAttributedString * maxRateAttStr = [[NSMutableAttributedString alloc]initWithString:maxRateStr attributes:drawAttributes];
+        CGSize sizeMaxRateAttStr = [maxRateAttStr size];
+        CGRect maxRateRect = CGRectMake(self.contentRight- (self.leftYAxisIsInChart?sizeMaxRateAttStr.width:0), self.contentTop, sizeMaxRateAttStr.width, sizeMaxRateAttStr.height);
+        [self drawRect:context rect:maxRateRect color:labelBGColor];
+        [self drawLabel:context attributesText:maxRateAttStr rect:maxRateRect];
+        
+        NSString * minRateStr = [self handleRateWithPrice:self.minPrice originPX:(self.maxPrice+self.minPrice)/2.0];
+        NSMutableAttributedString * minRateAttStr = [[NSMutableAttributedString alloc]initWithString:minRateStr attributes:drawAttributes];
+        CGSize sizeMinRateAttStr = [minRateAttStr size];
+        CGRect minRateRect = CGRectMake(self.contentRight-(self.leftYAxisIsInChart?sizeMinRateAttStr.width:0), ((self.uperChartHeightScale * self.contentHeight) + self.contentTop - sizeMinRateAttStr.height ), sizeMinRateAttStr.width, sizeMinRateAttStr.height);
+        [self drawRect:context rect:minRateRect color:labelBGColor];
+        [self drawLabel:context attributesText:minRateAttStr rect:minRateRect];
+    }
+    
+}
 
 - (void)drawTimeLabel:(CGContextRef)context {
     
@@ -429,8 +494,7 @@
 
 
 #pragma mark - Private method
-- (NSString *)handleShowWithVolume:(CGFloat)volume
-{
+- (NSString *)handleShowWithVolume:(CGFloat)volume {
     volume = volume/100.0;
     
     if (volume < 10000.0) {
@@ -441,8 +505,7 @@
         return @"亿手 ";
     }
 }
-- (NSString *)handleShowNumWithVolume:(CGFloat)volume
-{
+- (NSString *)handleShowNumWithVolume:(CGFloat)volume {
     volume = volume/100.0;
     if (volume < 10000.0) {
         return [NSString stringWithFormat:@"%.0f ",volume];
@@ -453,16 +516,93 @@
     }
 }
 
-- (NSString *)handleStrWithPrice:(CGFloat)price
-{
+- (NSString *)handleStrWithPrice:(CGFloat)price {
     if (self.isETF) {
         return [NSString stringWithFormat:@"%.3f ",price];
     }
     return [NSString stringWithFormat:@"%.2f ",price];
 }
 
-- (CALayer *)breathingPoint
+- (NSString *)handleRateWithPrice:(CGFloat)price
+                         originPX:(CGFloat)originPX {
+    
+    if (0 == originPX) {
+        return @"--";
+    }
+    CGFloat rate = (price - originPX)/originPX *100.00;
+    if(rate >0){
+        return [NSString stringWithFormat:@"+%.2f%@",rate,@"%"];
+        
+    }
+    return [NSString stringWithFormat:@"%.2f%@",rate,@"%"];
+}
+
+- (void)handleLongPressGestureAction:(UIPanGestureRecognizer *)recognizer {
+    if (!self.highlightLineShowEnabled) {
+        return;
+    }
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint  point = [recognizer locationInView:self];
+        
+        if (point.x > self.contentLeft && point.x < self.contentRight && point.y >self.contentTop && point.y<self.contentBottom) {
+            self.highlightLineCurrentEnabled = YES;
+            [self getHighlightByTouchPoint:point];
+        }
+    }
+    else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        
+        CGPoint  point = [recognizer locationInView:self];
+        
+        if (point.x > self.contentLeft && point.x < self.contentRight && point.y >self.contentTop && point.y<self.contentBottom) {
+            self.highlightLineCurrentEnabled = YES;
+            [self getHighlightByTouchPoint:point];
+        }
+    }
+    else {
+        if (self.highlightLineCurrentEnabled) {
+            self.highlightLineCurrentEnabled = NO;
+        }
+        [self setNeedsDisplay];
+    }
+}
+
+- (void)getHighlightByTouchPoint:(CGPoint)point {
+    
+    self.highlightLineCurrentIndex = (NSInteger)((point.x - self.contentLeft)/self.volumeWidth);
+    [self setNeedsDisplay];
+}
+
+- (UITapGestureRecognizer *)tapGesture {
+    if (!_tapGesture) {
+        _tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleLongTapGestureAction:)];
+    }
+    return _tapGesture;
+}
+- (void)handleLongTapGestureAction:(UITapGestureRecognizer *)recognizer {
+    if (self.highlightLineCurrentEnabled) {
+        self.highlightLineCurrentEnabled = NO;
+    }
+    [self setNeedsDisplay];
+}
+- (void)notifyDataSetChanged {
+    [super notifyDataSetChanged];
+    [self setNeedsDisplay];
+}
+- (void)notifyDeviceOrientationChanged {
+    [super notifyDeviceOrientationChanged];
+}
+
+
+- (UILongPressGestureRecognizer *)longPressGesture
 {
+    if (!_longPressGesture) {
+        _longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(handleLongPressGestureAction:)];
+        _longPressGesture.minimumPressDuration = 0.5;
+    }
+    return _longPressGesture;
+}
+
+- (CALayer *)breathingPoint {
     if (!_breathingPoint) {
         _breathingPoint = [CAScrollLayer layer];
         [self.layer addSublayer:_breathingPoint];
@@ -476,8 +616,7 @@
     }
     return _breathingPoint;
 }
--(CABasicAnimation *)breathingLight:(float)time
-{
+-(CABasicAnimation *)breathingLight:(float)time {
     CABasicAnimation *animation =[CABasicAnimation animationWithKeyPath:@"opacity"];
     animation.fromValue = [NSNumber numberWithFloat:1.0f];
     animation.toValue = [NSNumber numberWithFloat:0.3f];//这是透明度。
@@ -489,8 +628,8 @@
     animation.timingFunction= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     return animation;
 }
--(CAAnimationGroup *)groupAnimationDurTimes:(float)time;
-{
+-(CAAnimationGroup *)groupAnimationDurTimes:(float)time {
+    
     CABasicAnimation *scaleAnim = [CABasicAnimation animationWithKeyPath:@"transform"];
     scaleAnim.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
     scaleAnim.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.8, 0.8, 1.0)];
@@ -506,13 +645,11 @@
     return animation;
 }
 
-- (CGFloat)volumeWidth
-{
+- (CGFloat)volumeWidth {
     return self.contentWidth/self.countOfTimes;
 }
 
-- (NSDictionary *)defaultAttributedDic
-{
+- (NSDictionary *)defaultAttributedDic {
     if (!_defaultAttributedDic) {
         _defaultAttributedDic = @{NSFontAttributeName:[UIFont systemFontOfSize:10],NSBackgroundColorAttributeName:[UIColor clearColor]};
     }

@@ -9,31 +9,31 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @interface LineEntity : NSObject
-@property (nonatomic,assign)CGFloat open;
-@property (nonatomic,assign)CGFloat high;
-@property (nonatomic,assign)CGFloat low;
-@property (nonatomic,assign)CGFloat close;
-@property (nonatomic,assign)NSInteger index;
-@property (nonatomic,strong)NSString * date;
+@property (nonatomic) CGFloat open;
+@property (nonatomic) CGFloat high;
+@property (nonatomic) CGFloat low;
+@property (nonatomic) CGFloat close;
+@property (nonatomic) NSInteger index;
+@property (strong, nonatomic) NSString * date;
 
-@property (nonatomic,assign)CGFloat volume;
-@property (nonatomic,assign)CGFloat ma5;
-@property (nonatomic,assign)CGFloat ma10;
-@property (nonatomic,assign)CGFloat ma20;
-@property (nonatomic,assign)CGFloat preClosePx;
-@property (nonatomic,strong)NSString * rate;
+@property (nonatomic) CGFloat volume;
+@property (nonatomic) CGFloat ma5;
+@property (nonatomic) CGFloat ma10;
+@property (nonatomic) CGFloat ma20;
+@property (nonatomic) CGFloat preClosePx;
+@property (strong, nonatomic) NSString * rate;
 
 @end
 
 
 @interface TimeLineEntity : NSObject
-@property (nonatomic,strong)NSString * currtTime;
-@property (nonatomic,assign)CGFloat preClosePx;
-@property (nonatomic,assign)CGFloat avgPirce;
-@property (nonatomic,assign)CGFloat lastPirce;
-@property (nonatomic,assign)CGFloat totalVolume;
-@property (nonatomic,assign)CGFloat volume;
-@property (nonatomic,assign)CGFloat trade;
-@property (nonatomic,strong)NSString * rate;
+@property (strong, nonatomic) NSString * currtTime;
+@property (nonatomic) CGFloat preClosePx;
+@property (nonatomic) CGFloat avgPirce;
+@property (nonatomic) CGFloat lastPirce;
+@property (nonatomic) CGFloat totalVolume;
+@property (nonatomic) CGFloat volume;
+@property (nonatomic) CGFloat trade;
+@property (strong, nonatomic) NSString * rate;
 
 @end
