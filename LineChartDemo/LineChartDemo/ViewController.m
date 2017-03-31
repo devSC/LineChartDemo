@@ -50,7 +50,7 @@
     TimeDataset * set  = [[TimeDataset alloc]init];
     set.data = timeArray;
     set.avgLineCorlor = [UIColor colorWithRed:253/255.0 green:179/255.0 blue:8/255.0 alpha:1.0];
-    set.priceLineCorlor = [UIColor colorWithRed:24/255.0 green:96/255.0 blue:254/255.0 alpha:1.0];
+    set.priceLineCorlor = [UIColor colorWithRed:243/255.0 green:67/255.0 blue:60/255.0 alpha:1];
     set.lineWidth = 1.f;
     set.highlightLineWidth = .8f;
     set.highlightLineColor = [UIColor colorWithRed:60/255.0 green:76/255.0 blue:109/255.0 alpha:1.0];
@@ -59,8 +59,8 @@
     set.volumeRiseColor = [UIColor colorWithRed:233/255.0 green:47/255.0 blue:68/255.0 alpha:1.0];
     set.volumeFallColor = [UIColor colorWithRed:33/255.0 green:179/255.0 blue:77/255.0 alpha:1.0];
     
-    set.fillStartColor = [UIColor colorWithRed:24/255.0 green:96/255.0 blue:254/255.0 alpha:1.0];
-    set.fillStopColor = [UIColor whiteColor];
+    set.fillStartColor = [UIColor colorWithRed:243/255.0 green:67/255.0 blue:60/255.0 alpha:0.54];
+    set.fillStopColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2];
     set.fillAlpha = .5f;
     set.drawFilledEnabled = YES;
 //    self.chartView.delegate = self;
